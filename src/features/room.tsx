@@ -1,16 +1,16 @@
 import { useParams } from "react-router-dom"
 import amaLogo from '../assets/ama-logo.svg'
-import { Share2, ArrowRight, ArrowUp } from 'lucide-react'
+import { Share2 } from 'lucide-react'
 import { toast } from "sonner"
-import { Message } from "../components/message"
+import { Suspense } from "react"
+import { Messages } from "../components/messages"
+import { CreateMessageForm } from "../components/create-message-form"
 
 export function Room() {
 
     const { roomId } = useParams()
 
-    function handleCreateMessage(data: FormData) {
-        const theme = data.get('t')?.toString()
-    }
+
 
     function handleShareRoom() {
         const url = window.location.href.toString()
@@ -21,7 +21,7 @@ export function Room() {
             navigator.clipboard.writeText(url)
         }
 
-        toast.info("The room URL was copied to your clipboard!")
+        toast.success("Copiado!")
 
     }
 
@@ -43,28 +43,11 @@ export function Room() {
 
             <div className="h-px w-full bg-zinc-900" ></div>
 
-            <form
-                action={handleCreateMessage}
-                className='flex items-center gap-2 bg-zinc-900 p-2 rounded-xl border border-zinc-800 ring-orange-400 ring-offset-zinc-950 focus-within:ring-2 '>
-                <input
-                    type='text'
-                    name='theme'
-                    placeholder='Qual a sua pergunta?'
-                    className='flex-1 text-sm bg-transparent outline-none mx-2 text-zinc-100 placeholder:text-zinc-500'
-                    autoComplete='off'
-                />
-                <button type='submit' className='bg-orange-400 flex text-orange-950 px-3 py-1.5 gap-1.5 items-center rounded-lg font-medium text-sm hover:bg-orange-500 transition-colors'>
-                    Criar pergunta
-                    <ArrowRight className='size-4' />
-                </button>
-            </form>
+            <CreateMessageForm />
 
-            <ol className="list-decimal list-outside px-3 space-y-8">
-                <Message text="teste" amountOfReactions={123} answered />
-                <Message text="teste" amountOfReactions={123} />
-                <Message text="teste" amountOfReactions={123} />
-            </ol>
-
+            <Suspense fallback={<p>Carregando...</p>}>
+                <Messages />
+            </Suspense>
         </div>
     )
 }
